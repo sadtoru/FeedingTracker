@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "579456058693",
+    "firebase_url": "https://feeding-tracker-ar-default-rtdb.firebaseio.com",
+    "project_id": "feeding-tracker-ar",
+    "storage_bucket": "feeding-tracker-ar.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:579456058693:android:b06b749788ffaae17b2a2c",
+        "android_client_info": {
+          "package_name": "com.feeding.tracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "579456058693-m4f1hovptfhi95cckva10kphm2ee91un.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.feeding.tracker",
+            "certificate_hash": "eacc37b9f2f8a0a0c90fc464229bd8df89781d10"
+          }
+        },
+        {
+          "client_id": "579456058693-02087712cv467fti6sp4o1h2e53ato4h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYBHots1KfqHnCI6qU0uAGTGF2sDxYcbw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "579456058693-02087712cv467fti6sp4o1h2e53ato4h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
