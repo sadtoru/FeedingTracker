@@ -4,7 +4,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 object Login
+
 @Serializable
-object Register
+object SignUp
+
 @Serializable
 object Home
