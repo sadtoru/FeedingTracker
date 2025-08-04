@@ -1,4 +1,8 @@
 package com.feeding.tracker.ui.login
 
-class LoginScreen {
+import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
+
+@Composable
+fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
 }

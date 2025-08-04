@@ -65,6 +65,7 @@ dependencies {
     //Hilt + dagger
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation)
 
     // Firebase
     implementation(libs.firebase.auth)
