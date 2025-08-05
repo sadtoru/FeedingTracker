@@ -4,22 +4,19 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.feeding.tracker.ui.home.HomeScreen
-import com.feeding.tracker.ui.login.LoginScreen
-import com.feeding.tracker.ui.signup.SignUpScreen
 
 @Composable
-fun NavigationWrapper() {
+fun NavigationWrapper(){
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = SignUp) {
+    NavHost(navController = navController, startDestination = Login){
         composable<Login> {
-            LoginScreen()
+
         }
-        composable<SignUp> {
-            SignUpScreen { navController.navigate(Home) }
+        composable<Register> {
+
         }
         composable<Home> {
-            HomeScreen()
+
         }
     }
 }

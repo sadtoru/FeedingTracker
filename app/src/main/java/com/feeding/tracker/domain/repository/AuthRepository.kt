@@ -4,17 +4,8 @@ import com.feeding.tracker.domain.model.UserDomain
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
-    suspend fun login(
-        email: String,
-        password: String,
-    ): Flow<Result<UserDomain>>
-
-    suspend fun signUp(
-        email: String,
-        password: String,
-    ): Flow<Result<UserDomain>>
-
+    suspend fun login(email: String, password: String): Flow<Result<UserDomain>>
+    suspend fun register(email: String, password: String): Result<Unit>
     fun logout()
-
-    fun getCurrentUser(): Flow<UserDomain?>
+    fun getCurrentUserId(): String?
 }
