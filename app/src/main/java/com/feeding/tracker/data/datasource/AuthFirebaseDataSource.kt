@@ -4,73 +4,50 @@ import com.feeding.tracker.data.mappers.toDomain
 import com.feeding.tracker.domain.model.UserDomain
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class AuthFirebaseDataSource
-    @Inject
-    constructor(
-        private val auth: FirebaseAuth,
-    ) {
-        val currentUser: Flow<FirebaseUser?> =
-            callbackFlow {
-                val authStateListener =
-                    FirebaseAuth.AuthStateListener { firebaseAuth ->
-                        trySend(firebaseAuth.currentUser)
-                    }
-                auth.addAuthStateListener(authStateListener)
-                awaitClose { auth.removeAuthStateListener(authStateListener) }
+class AuthFirebaseDataSource(private val auth: FirebaseAuth){
+
+    val getCurrentUser: FirebaseUser? get() = auth.currentUser
+
+    fun login(email: String, password: String): Flow<Result<UserDomain>> = flow {
+        try {
+            // Llama a la función de Firebase
+            val authResult = auth
+                .createUserWithEmailAndPassword(email, password)
+                .await() // <-- Aquí es donde convertimos la 'Task' en una corrutina
+
+            // Si el resultado es exitoso, emitimos el usuario
+            val user = authResult.user
+            if (user != null) {
+                emit(Result.success(user.toDomain()))
+            } else {
+                emit(Result.failure(Exception("User not found after sign up")))
+            }
+
+        } catch (e: Exception) {
+            // Si hay una excepción (ej: autenticación fallida), emitimos el error
+            emit(Result.failure(e))
         }
+    }
 
-        fun login(
-            email: String,
-            password: String,
-        ): Flow<Result<UserDomain>> =
-            flow {
-                try {
-                    // Llama a la función de Firebase
-                    val authResult =
-                        auth
-                            .createUserWithEmailAndPassword(email, password)
-                            .await() // <-- Aquí es donde convertimos la 'Task' en una corrutina
+    fun register(email: String, password: String): Flow<Result<UserDomain>> = flow {
+        try {
+            val authResult = auth.createUserWithEmailAndPassword(email, password).await()
+            val user = authResult.user
 
-                    // Si el resultado es exitoso, emitimos el usuario
-                    val user = authResult.user
-                    if (user != null) {
-                        emit(Result.success(user.toDomain()))
-                    } else {
-                        emit(Result.failure(Exception("User not found after sign up")))
-                    }
-                } catch (e: Exception) {
-                    // Si hay una excepción (ej: autenticación fallida), emitimos el error
-                    emit(Result.failure(e))
-                }
+            if (user != null) {
+                emit(Result.success(user.toDomain()))
+            } else {
+                emit(Result.failure(Exception("User not found after sign up")))
             }
 
-        fun signUp(
-            email: String,
-            password: String,
-        ): Flow<Result<UserDomain>> =
-            flow {
-                try {
-                    val authResult = auth.createUserWithEmailAndPassword(email, password).await()
-                    val user = authResult.user
-
-                    if (user != null) {
-                        emit(Result.success(user.toDomain()))
-                    } else {
-                        emit(Result.failure(Exception("User not found after sign up")))
-                    }
-                } catch (e: Exception) {
-                    emit(Result.failure(e))
-                }
-            }
+        } catch (e: Exception) {
+            emit(Result.failure(e))
+        }
+    }
 
 //    suspend fun signInWithGoogle(credential: AuthCredential): AuthResult<FirebaseUser> =
 //        withContext(Dispatchers.IO) {
@@ -84,9 +61,9 @@ class AuthFirebaseDataSource
 //            }
 //        }
 
-        fun logout() {
-            auth.signOut()
-        }
-
-        fun getCurrentUserId(): String? = auth.currentUser?.uid
+    fun logout() {
+        auth.signOut()
     }
+
+    fun getCurrentUserId(): String? = auth.currentUser?.uid
+}
