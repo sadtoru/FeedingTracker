@@ -31,6 +31,7 @@ class HomeViewModel
                         userUiState.update {
                             it?.copy(
                                 email = user.email,
+                                name = user.name,
                             )
                         }
                     } else {

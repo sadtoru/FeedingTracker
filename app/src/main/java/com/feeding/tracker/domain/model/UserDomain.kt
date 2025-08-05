@@ -4,5 +4,5 @@ data class UserDomain(
     val uid: String?,
     val email: String,
     val photoUrl: String?,
-    val displayName: String?,
+    val name: String,
 )

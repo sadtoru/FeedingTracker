@@ -31,8 +31,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(text = "Hola ${userState.value?.email}" ?: "fds")
-            Text("asd")
+            Text(text = "Hola ${userState.value?.email}")
         }
     }
 }
