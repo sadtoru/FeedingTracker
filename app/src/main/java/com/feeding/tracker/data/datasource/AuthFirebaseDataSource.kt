@@ -4,7 +4,9 @@ import com.feeding.tracker.data.mappers.toDomain
 import com.feeding.tracker.domain.model.UserDomain
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -16,7 +18,15 @@ class AuthFirebaseDataSource
     constructor(
         private val auth: FirebaseAuth,
     ) {
-        val getCurrentUser: UserDomain? get() = auth.currentUser?.toDomain()
+        val currentUser: Flow<FirebaseUser?> =
+            callbackFlow {
+                val authStateListener =
+                    FirebaseAuth.AuthStateListener { firebaseAuth ->
+                        trySend(firebaseAuth.currentUser)
+                    }
+                auth.addAuthStateListener(authStateListener)
+                awaitClose { auth.removeAuthStateListener(authStateListener) }
+        }
 
         fun login(
             email: String,

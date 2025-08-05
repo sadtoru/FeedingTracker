@@ -16,5 +16,5 @@ interface AuthRepository {
 
     fun logout()
 
-    fun getCurrentUserId(): String?
+    fun getCurrentUser(): Flow<UserDomain?>
 }
