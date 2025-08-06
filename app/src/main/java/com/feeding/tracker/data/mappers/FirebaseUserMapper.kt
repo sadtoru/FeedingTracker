@@ -10,3 +10,10 @@ fun FirebaseUser.toDomain() =
         email = email ?: "",
         photoUrl = photoUrl?.toString() ?: "",
     )
+
+fun UserDomain.toData() =
+    FirebaseUserDTO(
+        email = email,
+        name = name,
+        photoUrl = photoUrl ?: "",
+    )
