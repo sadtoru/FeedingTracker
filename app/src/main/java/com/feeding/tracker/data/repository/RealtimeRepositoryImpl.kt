@@ -1,6 +1,6 @@
 package com.feeding.tracker.data.repository
 
-import com.feeding.tracker.data.datasource.FeedingFirebaseDataSource
+import com.feeding.tracker.data.datasource.RealtimeFirebaseDataSource
 import com.feeding.tracker.data.mappers.toData
 import com.feeding.tracker.domain.model.UserDomain
 import com.feeding.tracker.domain.repository.RealtimeRepository
@@ -10,7 +10,7 @@ import javax.inject.Inject
 class RealtimeRepositoryImpl
     @Inject
     constructor(
-        private val firebaseDataSource: FeedingFirebaseDataSource,
+        private val firebaseDataSource: RealtimeFirebaseDataSource,
     ) : RealtimeRepository {
         override fun addUserToDatabase(
             user: UserDomain,

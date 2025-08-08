@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 
-class FeedingFirebaseDataSource {
+class RealtimeFirebaseDataSource {
     private var database = Firebase.database.reference
 
     fun addUserToDatabase(

@@ -1,7 +1,7 @@
 package com.feeding.tracker.data.di
 
 import com.feeding.tracker.data.datasource.AuthFirebaseDataSource
-import com.feeding.tracker.data.datasource.FeedingFirebaseDataSource
+import com.feeding.tracker.data.datasource.RealtimeFirebaseDataSource
 import com.feeding.tracker.data.repository.AuthRepositoryImpl
 import com.feeding.tracker.data.repository.RealtimeRepositoryImpl
 import com.feeding.tracker.domain.repository.AuthRepository
@@ -26,9 +26,9 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideFeedingFirebaseDataSource(): FeedingFirebaseDataSource = FeedingFirebaseDataSource()
+    fun provideFeedingFirebaseDataSource(): RealtimeFirebaseDataSource = RealtimeFirebaseDataSource()
 
     @Provides
     @Singleton
-    fun provideRealtimeRepository(dataSource: FeedingFirebaseDataSource): RealtimeRepository = RealtimeRepositoryImpl(dataSource)
+    fun provideRealtimeRepository(dataSource: RealtimeFirebaseDataSource): RealtimeRepository = RealtimeRepositoryImpl(dataSource)
 }
