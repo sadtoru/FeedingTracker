@@ -30,5 +30,6 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideRealtimeRepository(dataSource: RealtimeFirebaseDataSource): RealtimeRepository = RealtimeRepositoryImpl(dataSource)
+    fun provideRealtimeRepository(
+        dataSource: RealtimeFirebaseDataSource): RealtimeRepository = RealtimeRepositoryImpl(dataSource)
 }

@@ -2,6 +2,7 @@ package com.feeding.tracker.data.repository
 
 import com.feeding.tracker.data.datasource.RealtimeFirebaseDataSource
 import com.feeding.tracker.data.mappers.toData
+import com.feeding.tracker.domain.model.Pet
 import com.feeding.tracker.domain.model.UserDomain
 import com.feeding.tracker.domain.repository.RealtimeRepository
 import kotlinx.coroutines.flow.Flow
@@ -16,4 +17,6 @@ class RealtimeRepositoryImpl
             user: UserDomain,
             uid: String,
         ): Flow<Result<UserDomain>> = firebaseDataSource.addUserToDatabase(user.toData(), uid)
+
+        override fun addPetToDatabase(pet: Pet): Flow<Result<Unit>> = firebaseDataSource.addPetToDatabase(pet.toData())
     }
