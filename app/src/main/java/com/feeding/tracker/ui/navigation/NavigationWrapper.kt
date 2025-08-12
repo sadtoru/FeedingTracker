@@ -16,7 +16,7 @@ fun NavigationWrapper() {
             LoginScreen()
         }
         composable<SignUp> {
-            SignUpScreen { navController.navigate(Home) }
+            SignUpScreen(onSingUpSuccess = { navController.navigate(Home) })
         }
         composable<Home> {
             HomeScreen()
