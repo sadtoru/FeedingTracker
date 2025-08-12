@@ -12,7 +12,7 @@ interface AuthRepository {
     suspend fun signUp(
         email: String,
         password: String,
-    ): Flow<Result<UserDomain>>
+    ): Result<UserDomain>
 
     fun logout()
 
