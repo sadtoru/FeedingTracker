@@ -26,7 +26,7 @@ class AuthFirebaseDataSource
                     }
                 auth.addAuthStateListener(authStateListener)
                 awaitClose { auth.removeAuthStateListener(authStateListener) }
-        }
+            }
 
         fun login(
             email: String,
@@ -53,23 +53,20 @@ class AuthFirebaseDataSource
                 }
             }
 
-        fun signUp(
+        suspend fun signUp(
             email: String,
             password: String,
-        ): Flow<Result<UserDomain>> =
-            flow {
-                try {
-                    val authResult = auth.createUserWithEmailAndPassword(email, password).await()
-                    val user = authResult.user
-
-                    if (user != null) {
-                        emit(Result.success(user.toDomain()))
-                    } else {
-                        emit(Result.failure(Exception("User not found after sign up")))
-                    }
-                } catch (e: Exception) {
-                    emit(Result.failure(e))
+        ): Result<UserDomain> =
+            try {
+                val authResult = auth.createUserWithEmailAndPassword(email, password).await()
+                val user = authResult.user
+                if (user != null) {
+                    Result.success(user.toDomain())
+                } else {
+                    Result.failure(Exception("User not found after sign up"))
                 }
+            } catch (e: Exception) {
+                Result.failure(e)
             }
 
 //    suspend fun signInWithGoogle(credential: AuthCredential): AuthResult<FirebaseUser> =

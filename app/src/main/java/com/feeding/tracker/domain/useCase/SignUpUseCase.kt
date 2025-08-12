@@ -16,46 +16,23 @@ class SignUpUseCase
         private val authRepository: AuthRepository,
         private val realtimeRepository: RealtimeRepository,
     ) {
-        //        suspend operator fun invoke(
-//            email: String,
-//            password: String,
-//        ): Flow<Result<UserDomain>> =
-//            flow {
-//                authRepository.signUp(email, password).collect { result ->
-//                    result
-//                        .onSuccess { userDomain ->
-//                            val userDomainResult =
-//                                realtimeRepository.addUserToDatabase(userDomain).first()
-//                            if (userDomainResult.isSuccess) {
-//                                emit(Result.success(userDomain))
-//                            } else {
-//                                emit(Result.failure(userDomainResult.exceptionOrNull()!!))
-//                            }
-//                        }.onFailure { exception ->
-//                            emit(Result.failure(exception))
-//                        }
-//                }
-//            }
-
-        @OptIn(ExperimentalCoroutinesApi::class)
         suspend operator fun invoke(
             email: String,
             password: String,
-        ): Flow<Result<UserDomain>> =
-            authRepository.signUp(email, password).flatMapConcat { result ->
-                result.fold(
-                    onSuccess = { userDomain ->
-                        realtimeRepository.addUserToDatabase(userDomain, userDomain.uid!!).map { dbResult ->
-                            if (dbResult.isSuccess) {
-                                Result.success(userDomain)
-                            } else {
-                                Result.failure(dbResult.exceptionOrNull()!!)
-                            }
-                        }
-                    },
-                    onFailure = {
-                        flowOf(Result.failure(it))
-                    },
-                )
-            }
+        ): Result<UserDomain> {
+            val result = authRepository.signUp(email, password)
+            return result.fold(
+                onSuccess = { userDomain ->
+                    val authUser = realtimeRepository.addUserToDatabase(userDomain, userDomain.uid!!)
+
+                    if (authUser.isSuccess) {
+                        return Result.success(userDomain)
+                    }
+                    Result.failure(Exception("Error al agregar el usuario a la base de datos"))
+                },
+                onFailure = {
+                    Result.failure(it)
+                },
+            )
+        }
     }

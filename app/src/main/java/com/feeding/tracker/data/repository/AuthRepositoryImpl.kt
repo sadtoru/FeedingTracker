@@ -21,7 +21,7 @@ class AuthRepositoryImpl
         override suspend fun signUp(
             email: String,
             password: String,
-        ): Flow<Result<UserDomain>> = authDataSource.signUp(email, password)
+        ): Result<UserDomain> = authDataSource.signUp(email, password)
 
         override fun logout() {
             TODO("Not yet implemented")

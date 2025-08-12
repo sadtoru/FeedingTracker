@@ -1,6 +1,5 @@
 package com.feeding.tracker.ui.signup
 
-import ads_mobile_sdk.h4
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,12 +8,10 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,17 +21,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.feeding.tracker.domain.model.UserDomain
-import com.feeding.tracker.ui.login.LoginUiState
+import com.feeding.tracker.ui.auth.AuthFormState
+import com.feeding.tracker.ui.auth.AuthUiState
+import com.feeding.tracker.ui.auth.AuthViewModel
+import com.feeding.tracker.ui.components.FeedingInput
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(
-    viewModel: SignUpViewModel = hiltViewModel(),
+    viewModel: AuthViewModel = hiltViewModel(),
     onSingUpSuccess: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val formState by viewModel.state.collectAsStateWithLifecycle()
+    val formState by viewModel.formState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
     // Scaffold proporciona la estructura de la pantalla
@@ -67,36 +66,59 @@ fun SignUpScreen(
             // - Mensaje de error
 
             when (uiState) {
-                is LoginUiState.Idle -> {
+                is AuthUiState.Idle -> {
                     // Mostrar el formulario de login y los botones
-                    TextField(value = formState.email, onValueChange = { viewModel.onEmailChange(it) })
-                    TextField(
+                    FeedingInput(
+                        value = formState.name,
+                        onValueChange = { viewModel.onNameChange(it) },
+                        label = "Name",
+                        error = formState.nameError,
+                    )
+                    FeedingInput(
+                        value = formState.email,
+                        onValueChange = { viewModel.onEmailChange(it) },
+                        label = "Email",
+                        error = formState.emailError,
+                    )
+                    FeedingInput(
                         value = formState.password,
                         onValueChange = { viewModel.onPasswordChange(it) },
+                        label = "Password",
+                        isPassword = true,
+                        error = formState.passwordError,
+                    )
+                    FeedingInput(
+                        value = formState.confirmPassword,
+                        onValueChange = { viewModel.onConfirmPasswordChange(it) },
+                        label = "Confirm Password",
+                        isPassword = true,
+                        error = formState.confirmPasswordError,
                     )
                     Button(onClick = {
-                        viewModel.onSignUpClicked(
-                            formState.email,
-                            formState.password,
-                        )
+                        viewModel.signUp()
                     }) { Text("Sign Up") }
                 }
 
-                is LoginUiState.Loading -> {
+                is AuthUiState.Loading -> {
                     // Mostrar un ProgressBar
                     CircularProgressIndicator(
                         modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.Center),
                     )
                 }
 
-                is LoginUiState.Success -> {
+                is AuthUiState.Success -> {
                     // Navegar a otra pantalla al tener éxito
-                    onSingUpSuccess()
+                    LaunchedEffect(formState.authSuccess) {
+                        if (formState.authSuccess) {
+                            onSingUpSuccess()
+                            viewModel.clearAuthSuccess()
+                        }
+                    }
                 }
 
-                is LoginUiState.Error -> {
+                is AuthUiState.Error -> {
                     LaunchedEffect(uiState) {
-                        val errorMessage = (uiState as LoginUiState.Error).message
+                        val errorMessage = (uiState as AuthUiState.Error).message
                         snackbarHostState.showSnackbar(errorMessage)
                     }
                 }

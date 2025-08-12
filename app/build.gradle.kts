@@ -27,7 +27,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -58,11 +58,14 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.tooling.preview)
 
+    // MU Icons Extended
+    implementation(libs.material.icons.extended)
+
     // Navegación
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
 
-    //Hilt + dagger
+    // Hilt + dagger
     implementation(libs.hilt.android)
     implementation(libs.ads.mobile.sdk)
     ksp(libs.hilt.compiler)
