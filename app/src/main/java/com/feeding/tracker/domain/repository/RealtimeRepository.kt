@@ -5,10 +5,10 @@ import com.feeding.tracker.domain.model.UserDomain
 import kotlinx.coroutines.flow.Flow
 
 interface RealtimeRepository {
-    fun addUserToDatabase(
+    suspend fun addUserToDatabase(
         user: UserDomain,
         uid: String,
-    ): Flow<Result<UserDomain>>
+    ): Result<UserDomain>
 
     fun addPetToDatabase(pet: Pet): Flow<Result<Unit>>
 }

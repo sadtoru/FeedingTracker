@@ -13,10 +13,10 @@ class RealtimeRepositoryImpl
     constructor(
         private val firebaseDataSource: RealtimeFirebaseDataSource,
     ) : RealtimeRepository {
-        override fun addUserToDatabase(
+        override suspend fun addUserToDatabase(
             user: UserDomain,
             uid: String,
-        ): Flow<Result<UserDomain>> = firebaseDataSource.addUserToDatabase(user.toData(), uid)
+        ): Result<UserDomain> = firebaseDataSource.addUserToDatabase(user.toData(), uid)
 
         override fun addPetToDatabase(pet: Pet): Flow<Result<Unit>> = firebaseDataSource.addPetToDatabase(pet.toData())
     }
