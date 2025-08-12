@@ -13,21 +13,19 @@ import kotlinx.coroutines.tasks.await
 class RealtimeFirebaseDataSource {
     private var database = Firebase.database.reference
 
-    fun addUserToDatabase(
+    suspend fun addUserToDatabase(
         user: UserRealtime,
         uid: String,
-    ): Flow<Result<UserDomain>> =
-        flow {
-            try {
-                database
-                    .child("users")
-                    .child(uid)
-                    .setValue(user)
-                    .await()
-                emit(Result.success(user.toDomain(uid)))
-            } catch (e: Exception) {
-                emit(Result.failure(e))
-            }
+    ): Result<UserDomain> =
+        try {
+            database
+                .child("users")
+                .child(uid)
+                .setValue(user)
+                .await()
+            Result.success(user.toDomain(uid))
+        } catch (e: Exception) {
+            Result.failure(e)
         }
 
     fun addPetToDatabase(pet: PetRealtime): Flow<Result<Unit>> =
